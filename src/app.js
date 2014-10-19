@@ -12,7 +12,9 @@ var wmata_api_key = '28sftnnprxj9tf58jb4u245c';
 var wmata_stations_url = 'http://api.wmata.com/Rail.svc/json/JStations';
 var wmata_trains_url = 'http://api.wmata.com/StationPrediction.svc/json/GetPrediction/';
 var wmata_incidents_url = 'http://api.wmata.com/Incidents.svc/json/Incidents';
-
+var wmata_eta_url = 'http://api.wmata.com/rail.svc/json/JSrcStationToDstStationInfo?FromStationCode=C05&ToStationCode=';
+var yellowpages_hospital_url='http://api.yellowapi.com/FindBusiness/?what=hospital';
+var yellowpages_api_key = '8nw5j8g3h69s3jqhaje79ke7';
 var google_directions_url = 'https://maps.googleapis.com/maps/api/directions/json';
 var google_directions_api_key = 'AIzaSyBObZpkTaEw5D9i5mXW8mUep2SxxTSp920';
 var closestlocationname;
@@ -195,13 +197,22 @@ function load_stations (line)
 	}, function (data) {
 		if (data.Stations.length > 0)
 		{
-			for (var s in data.Stations)
+			// temporarily limit red line stations to 10
+			// because of malformed data coming from the api
+			var max = 0;
+			if (line == "rd"){
+				max = 10;
+			} else {
+				max = data.Stations.length
+			}
+			console.log('line:: ' + line);
+			for (var s = 0; s < max; s++)
 			{
 				console.log(s + '\t' + data.Stations[s].Name);
 				stations_list.item(0, s, { title: data.Stations[s].Name });
 			}
 			stations_list.on('select', function (e) {
-				load_trains(data.Stations[e.itemIndex]);
+				get_eta(data.Stations[e.itemIndex]);
 			});
 		}
 		else
@@ -356,7 +367,7 @@ function load_Health()
 {
 	var Health = new UI.Card({
 		title: "Health",
-		body: "George Washington University Hospital",
+		body: "Closest Hospital: George Washington University Hospital, 2131 K St NW, Washington, DC 20037",
 		scrollable: true
 	});
 	Health.show();
@@ -424,7 +435,7 @@ networkselect.on('select', function (e) {
 			main.show();
 			break;
 		case 3:
-			directions_to();
+      load_about();
 			break;
 	}
 });
@@ -432,7 +443,41 @@ networkselect.on('select', function (e) {
  * Main body
  */
 
+/*
+ * Get ETA
+ */
+function get_eta(station)
+{
+	console.log('station:: ' + JSON.stringify(station));
+	console.log('station code:: ' + station.Code); //K07
+	var url = wmata_eta_url + station.Code + '&api_key=' + wmata_api_key;
+	console.log(url);
+	
+	new Ajax({
+		url: url,
+		type: 'json'
+	}, function (data) {
+		console.log('data:: ' + JSON.stringify(data));
+		var stationInfo = data && data.StationToStationInfos && data.StationToStationInfos[0];
+		console.log('stationInfo:: ' + JSON.stringify(stationInfo));
+		var card = new UI.Card({
+			title: 'ETA',
+			body: stationInfo.RailTime + ' minutes\nPeak: $' + stationInfo.RailFare.PeakTime.toFixed(2) + '\nOff-peak: $' + stationInfo.RailFare.OffPeakTime.toFixed(2),
+			scrollable: true
+		});
+		card.show();
 
+	}, function (error) {
+		var card = new UI.Card({
+			title: 'Error',
+			body: error,
+			scrollable: true
+		});
+		console.log('Error getting trains: ' + error);
+		card.show();
+	});
+	
+}
 
 main.on('select', function (e) {
 	switch (e.itemIndex)
@@ -450,6 +495,9 @@ main.on('select', function (e) {
       case 3:
 			load_incidents();
 			break;
+      case 4:
+	directions_to();
+      break;
 	}
 });
 serviceselect.on('select', function (e) {
