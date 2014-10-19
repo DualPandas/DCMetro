@@ -13,7 +13,11 @@ var wmata_stations_url = 'http://api.wmata.com/Rail.svc/json/JStations';
 var wmata_trains_url = 'http://api.wmata.com/StationPrediction.svc/json/GetPrediction/';
 var wmata_incidents_url = 'http://api.wmata.com/Incidents.svc/json/Incidents';
 
-
+var google_directions_url = 'https://maps.googleapis.com/maps/api/directions/json';
+var google_directions_api_key = 'AIzaSyBObZpkTaEw5D9i5mXW8mUep2SxxTSp920';
+var closestlocationname;
+var my_lat;
+var my_lon;
 /*
  * Translates station line code (`line`) into text.
  */
@@ -61,6 +65,7 @@ function determine_location()
 {
 	console.log('Attempting to determine location');
 	navigator.geolocation.getCurrentPosition(load_closest_station);
+ 
 }
 
 /*
@@ -68,8 +73,8 @@ function determine_location()
  */
 function load_closest_station (position)
 {
-	var my_lat = position.coords.latitude;
-	var my_lon = position.coords.longitude;
+	my_lat = position.coords.latitude;
+	my_lon = position.coords.longitude;
 	
 	new Ajax({
 		url: wmata_stations_url + '?api_key=' + wmata_api_key,
@@ -88,6 +93,7 @@ function load_closest_station (position)
 		}
 		console.log('closest station is ' + closest.Name);
 		load_trains(closest);
+    closestlocationname= closest.Name;
 	}, function (error) {
 		console.log('Error getting closest station: ' + error);
 		var card = new UI.Card({
@@ -219,7 +225,45 @@ function load_stations (line)
 		card.show();
 	});
 }
+function directions_to() 
+{
 
+  
+  var to_location = 'Rosslyn Metro Station';
+  
+//  var direction_text;
+  
+  //var directions_array = [];
+  new Ajax({
+		url: google_directions_url + '?mode=walking&origin=' + my_lat +','+my_lon + '&destination=' + to_location + '&key=' + google_directions_api_key,
+		type: 'json',
+    method:'GET',
+	}, function (data) {
+    console.log('data:: ' + JSON.stringify(data));
+   //var data2=  JSON.stringify(data);
+  //  var steps= data2.routes[0].legs[0].steps;
+// 		{
+// 			direction_text = data.routes.legs[0].steps[s].html_instructions;
+//       directions_array[s] = direction_text;
+      
+// 		}
+//		console.log('directions are ' + data.stringify());
+    
+    var card_dir_show = new UI.Card({
+      title:'Directions',
+      body:"1: Head west on Wilson Blvd toward N Lynn St 2: Turn right onto N Fort Myer Dr. Destination will be on the right"
+    });
+    card_dir_show.show();
+	}, function (error) {
+		console.log('Error getting directions: ' + error);
+		var card = new UI.Card({
+			title: 'Error',
+			body: error
+		});
+		card.show();
+	});
+  
+}
 /*
  * Loads trains passing through `station` into a menu.
  */
@@ -311,8 +355,8 @@ function load_about()
 function load_Health()
 {
 	var Health = new UI.Card({
-		title: "About",
-		body: "DCMETRO MoDevDC2014",
+		title: "Health",
+		body: "George Washington University Hospital",
 		scrollable: true
 	});
 	Health.show();
@@ -380,7 +424,7 @@ networkselect.on('select', function (e) {
 			main.show();
 			break;
 		case 3:
-			load_about();
+			directions_to();
 			break;
 	}
 });
