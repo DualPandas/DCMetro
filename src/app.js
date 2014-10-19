@@ -129,6 +129,7 @@ function load_lines()
 		lines_list.item (0, l, {
 			title: tr_line (lines[l]) + ' Line',
 			line: lines[l],
+      icon: 'images/' + lines[l] + '.png'
 			
 		});
 	}
@@ -211,7 +212,7 @@ function load_trains(station)
 				else if (data.Trains[t].DestinationName == 'Train')
 					trains_list.item(0, added, { title: tr_time(data.Trains[t].Min), subtitle: 'Train' });
 				else
-					trains_list.item(0, added, { title: tr_time(data.Trains[t].Min), subtitle: 'to ' + data.Trains[t].DestinationName});
+					trains_list.item(0, added, { title: tr_time(data.Trains[t].Min), subtitle: 'to ' + data.Trains[t].DestinationName, icon: 'images/' + data.Trains[t].Line.toLowerCase() + '.png' });
 				
 				added ++;
 			}
@@ -246,14 +247,14 @@ function load_trains(station)
 var main = new UI.Menu({
 	sections: [{
 		items: [{
-			title: 'Closest station',
-		
+      title: 'Closest station',
+			icon: 'images/location.png'
 		}, {
 			title: 'Pick a station',
-			
+			icon: 'images/metro.png'
 		},  {
 			title: 'About',
-			
+			icon: 'images/info.png'
 		}]
 	}]
 });
@@ -313,7 +314,7 @@ main.on('select', function (e) {
 	{
 		case 0:
 			determine_location();
-      icon: 'images/location.png'
+     
 			break;
 		case 1:
 			load_lines();
