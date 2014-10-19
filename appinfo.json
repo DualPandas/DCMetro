@@ -1,7 +1,7 @@
 {
     "appKeys": {},
-    "capabilities": [
-        ""
+   "capabilities": [
+        "location"
     ],
     "companyName": "gchorba@gmail.com",
     "longName": "MetroPedia",
