@@ -11,7 +11,7 @@ var Ajax = require('ajax');
 var wmata_api_key = '28sftnnprxj9tf58jb4u245c';
 var wmata_stations_url = 'http://api.wmata.com/Rail.svc/json/JStations';
 var wmata_trains_url = 'http://api.wmata.com/StationPrediction.svc/json/GetPrediction/';
-
+var wmata_incidents_url = 'http://api.wmata.com/Incidents.svc/json/Incidents';
 
 
 /*
@@ -138,7 +138,41 @@ function load_lines()
 		load_stations(e.item.line);
 	});
 }
-
+function load_incidents()
+{
+	var card = new UI.Card({
+		title: 'Incidents',
+		body: 'Loading...',
+		scrollable: true
+	});
+	
+	new Ajax ({
+		url: wmata_incidents_url + '?api_key=' + wmata_api_key,
+		type: 'json'
+	}, function (data) {
+		if (data.Incidents.length > 0)
+		{
+			var str = '';
+			for (var i in data.Incidents)
+			{
+				str += data.Incidents[i].IncidentType + ':\n' + data.Incidents[i].Description + '\n\n';
+			}
+			card.body(str);
+		}
+		else
+		{
+			card.body('There are no incidents.');
+		}
+		card.show();
+	}, function (error) {
+		console.log('Error getting incidents: ' + error);
+		card.title('Error');
+		card.body(error);
+		card.show();
+	});
+	
+	
+}
 /*
  * Loads the stations on `line` into a menu.
  */
@@ -252,10 +286,14 @@ var main = new UI.Menu({
 		}, {
 			title: 'Pick a station',
 			icon: 'images/metro.png'
-		},  {
-			title: 'About',
+		},{
+			title: 'Other Info',
 			icon: 'images/info.png'
-		}]
+		},{
+			title: 'Incidents',
+			icon: 'images/info.png'
+		},
+    ]
 	}]
 });
 	
@@ -270,6 +308,25 @@ function load_about()
 	});
 	about_card.show();
 }
+function load_Health()
+{
+	var Health = new UI.Card({
+		title: "About",
+		body: "DCMETRO MoDevDC2014",
+		scrollable: true
+	});
+	Health.show();
+}
+function load_PublicSafety()
+{
+	var PublicSafety = new UI.Card({
+		title: "PublicSafety",
+		body: "Closest Police Station:Arlington County Police Department, 1425 N Courthouse Rd ",
+		scrollable: true
+	});
+	PublicSafety.show();
+}
+
 /*
  * StationNetworks
  */
@@ -285,8 +342,35 @@ var networkselect = new UI.Menu({
 		},  {
 			title: 'Baltimore - (Unavailable)',
 			
+		},  {
+			title: 'About',
+			icon: 'images/info.png'
+		}
+           ]
+	}]
+});
+var serviceselect = new UI.Menu({
+	sections: [{
+		items: [{
+			title: 'Health',
+			
+		},  {
+			title: 'Public Safety',
+			
 		}]
 	}]
+});
+
+serviceselect.on('select', function (e) {
+	switch (e.itemIndex)
+	{
+		case 0:
+			load_Health();
+			break;
+		case 1:
+			load_PublicSafety();
+			break;
+	}
 });
 networkselect.show();
 networkselect.on('select', function (e) {
@@ -295,11 +379,8 @@ networkselect.on('select', function (e) {
 		case 0:
 			main.show();
 			break;
-		case 1:
-			//load_lines();
-			break;
-		case 2:
-			//load_about();
+		case 3:
+			load_about();
 			break;
 	}
 });
@@ -320,8 +401,21 @@ main.on('select', function (e) {
 			load_lines();
 			break;
 		case 2:
-			load_about();
+		serviceselect.show();
+			break;
+      case 3:
+			load_incidents();
 			break;
 	}
 });
-
+serviceselect.on('select', function (e) {
+	switch (e.itemIndex)
+	{
+		case 0:
+			load_Health();
+			break;
+		case 1:
+			load_PublicSafety();
+			break;
+	}
+});
