@@ -8,9 +8,8 @@
     "projectType": "pebblejs",
     "resources": {
         "media": [
-            {
+           {
                 "file": "images/menu_icon.png",
-                "menuIcon": true,
                 "name": "IMAGE_MENU_ICON",
                 "type": "png"
             },
@@ -30,7 +29,28 @@
                 "type": "font"
             },
             {
+                "file": "images/yl.png",
+                "name": "IMAGES_YL_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/sv.png",
+                "name": "IMAGES_SV_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/rd.png",
+                "name": "IMAGES_RD_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/or.png",
+                "name": "IMAGES_OR_PNG",
+                "type": "png"
+            },
+            {
                 "file": "images/metro.png",
+                "menuIcon": true,
                 "name": "IMAGES_METRO_PNG",
                 "type": "png"
             },
@@ -42,6 +62,21 @@
             {
                 "file": "images/info.png",
                 "name": "IMAGES_INFO_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/incidents.png",
+                "name": "IMAGES_INCIDENTS_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/gr.png",
+                "name": "IMAGES_GR_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/bl.png",
+                "name": "IMAGES_BL_PNG",
                 "type": "png"
             }
         ]
