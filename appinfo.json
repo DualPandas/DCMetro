@@ -1,14 +1,14 @@
 {
     "appKeys": {},
-   "capabilities": [
+    "capabilities": [
         "location"
     ],
     "companyName": "gchorba@gmail.com",
-    "longName": "MetroPedia",
+    "longName": "Metropedia",
     "projectType": "pebblejs",
     "resources": {
         "media": [
-           {
+            {
                 "file": "images/menu_icon.png",
                 "name": "IMAGE_MENU_ICON",
                 "type": "png"
@@ -49,24 +49,8 @@
                 "type": "png"
             },
             {
-                "file": "images/metro.png",
-                "menuIcon": true,
-                "name": "IMAGES_METRO_PNG",
-                "type": "png"
-            },
-            {
-                "file": "images/location.png",
-                "name": "IMAGES_LOCATION_PNG",
-                "type": "png"
-            },
-            {
                 "file": "images/info.png",
                 "name": "IMAGES_INFO_PNG",
-                "type": "png"
-            },
-            {
-                "file": "images/incidents.png",
-                "name": "IMAGES_INCIDENTS_PNG",
                 "type": "png"
             },
             {
@@ -78,10 +62,21 @@
                 "file": "images/bl.png",
                 "name": "IMAGES_BL_PNG",
                 "type": "png"
+            },
+            {
+                "file": "images/location.png",
+                "name": "IMAGES_LOCATION_PNG",
+                "type": "png"
+            },
+            {
+                "file": "images/metro.png",
+                "menuIcon": true,
+                "name": "IMAGES_METRO_PNG",
+                "type": "png"
             }
         ]
     },
-    "shortName": "DCMetro",
+    "shortName": "Metropedia",
     "uuid": "4faba902-66f4-4ac8-a931-f2960de6169f",
     "versionCode": 1,
     "versionLabel": "1.0",

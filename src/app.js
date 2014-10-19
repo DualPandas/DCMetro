@@ -276,6 +276,7 @@ var networkselect = new UI.Menu({
 	sections: [{
 		items: [{
 			title: 'DC Metro - WMATA',
+      
 		
 		}, {
 			title: 'New York - (Unavailable)',
@@ -312,6 +313,7 @@ main.on('select', function (e) {
 	{
 		case 0:
 			determine_location();
+      icon: 'images/location.png'
 			break;
 		case 1:
 			load_lines();
